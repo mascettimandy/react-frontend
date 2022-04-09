@@ -3,12 +3,19 @@ import { useState } from "react";
 import { gql } from "@apollo/client";
 
 export default function Form(props) {
+  console.log("props here:", props);
+
   const [formData, setFormData] = useState({
-    url: ""
+    url: "",
+    slug: ""
   });
 
   function handleChange(evt) {
-    console.log("form data", evt.target.value);
+    setFormData({
+      ...formData,
+      url: evt.target.value,
+      slug: props.makeSlug(evt.target.value)
+    });
   }
 
   const handleSubmit = (evt) => {
@@ -35,7 +42,7 @@ export default function Form(props) {
       <input type="submit" value="Shorten URL" />
       <br />
       <br />
-      <label for="slug"> Shortened URL: </label>
+      <label htmlFor="slug"> Shortened URL: </label>
       <span id="slug" />
     </form>
   );

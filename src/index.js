@@ -9,10 +9,20 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+function makeSlug(url) {
+  var random_string =
+    Math.random().toString(32).substring(2, 5) +
+    Math.random().toString(32).substring(2, 5);
+  console.log("result:", random_string);
+  return random_string;
+}
+
+console.log(makeSlug(4));
+
 function App() {
   return (
     <div>
-      <Form client={client} />
+      <Form client={client} makeSlug={makeSlug} />
     </div>
   );
 }
