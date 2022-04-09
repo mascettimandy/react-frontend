@@ -1,49 +1,50 @@
 import React from "react";
-import { useState } from "react";
-import { gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import gql from "graphql-tag";
+
+const GET_SLUGS = gql`
+  {
+    Link {
+      url
+      slug
+    }
+  }
+`;
+
+const SEND_URLS = gql`
+  mutation createUrl($url: String!, $slug: String!) {
+    createUrl(input: { url: $url, slug: $slug }) {
+      url
+      slug
+    }
+  }
+`;
 
 export default function Form(props) {
-  console.log("props here:", props);
-
-  const [formData, setFormData] = useState({
-    url: "",
-    slug: ""
-  });
-
-  function handleChange(evt) {
-    setFormData({
-      ...formData,
-      url: evt.target.value,
-      slug: props.makeSlug(evt.target.value)
-    });
-  }
+  const { data } = useQuery(GET_SLUGS);
+  const [createUrl] = useMutation(SEND_URLS);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    props.client
-      .query({
-        query: gql`
-          query Query {
-            url
-            slug
-          }
-        `
-      })
-      .then((result) => console.log(result));
+    createUrl({
+      variables: {
+        url: evt.target.value,
+        slug: props.makeSlug(evt.target.value)
+      }
+    });
   };
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        id="url"
-        type="text"
-        onChange={handleChange}
-        value={formData.url}
-      />
-      <input type="submit" value="Shorten URL" />
-      <br />
-      <br />
-      <label htmlFor="slug"> Shortened URL: </label>
-      <span id="slug" />
-    </form>
-  );
+
+  return data.slugs.map(({ url, slug }) => {
+    let input;
+    return (
+      <form onSubmit={handleSubmit}>
+        <input id="url" type="text" value={url} />
+        <input type="submit" value="Shorten URL" />
+        <br />
+        <br />
+        <label htmlFor="slug"> Shortened URL: </label>
+        <span id="slug" value={slug} />
+      </form>
+    );
+  });
 }
