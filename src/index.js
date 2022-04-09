@@ -1,5 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
+import Form from "../Form";
+
 import {
   ApolloClient,
   InMemoryCache,
@@ -13,21 +15,21 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-client
-  .query({
-    query: gql`
-      query Query {
-        name
-        book
-      }
-    `
-  })
-  .then((result) => console.log(result));
+// client
+//   .query({
+//     query: gql`
+//       query Query {
+//         name
+//         book
+//       }
+//     `
+//   })
+//   .then((result) => console.log(result));
 
 function App() {
   return (
     <div>
-      <h2>My first Apollo app </h2>
+      <Form />
     </div>
   );
 }
