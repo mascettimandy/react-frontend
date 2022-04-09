@@ -17,7 +17,8 @@ client
   .query({
     query: gql`
       query Query {
-        hello
+        name
+        book
       }
     `
   })
