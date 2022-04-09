@@ -1,13 +1,39 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React from "react";
+import { render } from "react-dom";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql
+} from "@apollo/client";
 
-import App from "./App";
+const client = new ApolloClient({
+  uri: "https://ekqg4k.sse.codesandbox.io/",
+  cache: new InMemoryCache()
+});
 
-const rootElement = document.getElementById("root");
-const root = createRoot(rootElement);
+client
+  .query({
+    query: gql`
+      query Query {
+        hello
+      }
+    `
+  })
+  .then((result) => console.log(result));
 
-root.render(
-  <StrictMode>
+function App() {
+  return (
+    <div>
+      <h2>My first Apollo app </h2>
+    </div>
+  );
+}
+
+render(
+  <ApolloProvider client={client}>
     <App />
-  </StrictMode>
+  </ApolloProvider>,
+  document.getElementById("root")
 );
